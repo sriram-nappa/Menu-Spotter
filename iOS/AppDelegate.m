@@ -8,7 +8,6 @@
  */
 
 #import "AppDelegate.h"
-
 #import "RCTRootView.h"
 
 @implementation AppDelegate
@@ -26,18 +25,19 @@
   //
   // To run on device, change `localhost` to the IP address of your computer, and make sure your computer and
   // iOS device are on the same Wi-Fi network.
-  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle"];
-
+    
+  //  jsCodeLocation = [NSURL URLWithString:@"http://192.168.0.108:8081/index.ios.bundle?platform=ios&dev=true"];
+//  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
   // OPTION 2
   // Load from pre-bundled file on disk. To re-generate the static bundle, run
   //
   // $ curl http://localhost:8081/index.ios.bundle -o main.jsbundle
   //
   // and uncomment the next following line
-  // jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
     RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                        moduleName:@"PropertyFinder"
+                                                        moduleName:@"MenuSpotter"
                                                  initialProperties:nil
                                                      launchOptions:launchOptions];
 

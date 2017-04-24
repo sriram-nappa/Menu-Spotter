@@ -9,6 +9,7 @@ var {
   View,
   TouchableHighlight,
   ActivityIndicatorIOS,
+  AsyncStorage,
   Image,
   Component
 } = React;
@@ -82,12 +83,25 @@ function urlForQueryAndPage(key, value, pageNumber) {
   return 'http://api.nestoria.co.uk/api?' + querystring;
 };
 
+function urlForGettingNearbyRestaurants(latitude, longitude) {
+  var data = {
+    lat: latitude,
+    lng: longitude
+  };
+
+  var querystring = Object.keys(data)
+    .map(key => key + '=' + encodeURIComponent(data[key]))
+    .join('&');
+
+  return 'https://order.postmates.com/v1/feed/anywhere?' + querystring;
+}
+
 class SearchPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      searchString: 'london',
+      searchString: 'Tempe',
       isLoading: false,
       message: ''
     };
@@ -97,9 +111,23 @@ class SearchPage extends Component {
     this.setState({ isLoading: false });
     if (response.application_response_code.substr(0, 1) === '1') {
       this.props.navigator.push({
-        title: 'Results',
+        title: 'Nearby Restaurants',
         component: SearchResults,
         passProps: {listings: response.listings}
+      });
+    } else {
+      this.setState({ message: 'Location not recognized please try again.'});
+    }
+  }
+
+  _handleLocationResponse(response) {
+    this.setState({ isLoading: false });
+    console.log(response)
+    if(response.length) {
+      this.props.navigator.push({
+        title: 'Nearby Restaurants',
+        component: SearchResults,
+        passProps: {listings: response}
       });
     } else {
       this.setState({ message: 'Location not recognized please try again.'});
@@ -118,25 +146,46 @@ class SearchPage extends Component {
         });
       });
   }
-
+  _executeLocationQuery(query) {
+    this.setState({ isLoading:true, message: ''});
+    fetch(query)
+      .then(response => response.json())
+      .then(json => this._handleLocationResponse(json.feed_items))
+      .catch(error => {
+        this.setState({
+          isLoading: false,
+          message: 'Something bad happened ' + error 
+        });
+      });
+  }
+  
   onSearchPressed() {
     var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
     this._executeQuery(query);
   }
-
+  
   onLocationPressed() {
+    // try{
+    //   await AsyncStorage.setItem('@myStore:key',' You had clicked here once');
+    // } catch (error) {
+    //   console.log('Something went wrong while persisting');
+    // }
     navigator.geolocation.getCurrentPosition(
       location => {
         var search = location.coords.latitude + ',' + location.coords.longitude;
         this.setState({ searchString: search });
-        var query = urlForQueryAndPage('centre_point', search, 1);
-        this._executeQuery(query);
+        var query = urlForGettingNearbyRestaurants(location.coords.latitude, location.coords.longitude);
+        // this._executeQuery(query);
+        this._executeLocationQuery(query);
       },
       error => {
         this.setState({
           message: 'There was a problem with obtaining your locaton: ' + error
         });
       });
+  }
+  onUserProfilePressed() {
+
   }
 
   onSearchTextChanged(event) {
@@ -150,13 +199,22 @@ class SearchPage extends Component {
           size='large'/> ) :
       ( <View/>);
 
+    let pressedInfo = 'Nothing';
+    // try {
+    //   pressedInfo = await AsyncStorage.getItem('@myStore:key');
+    // } catch (error) {
+    //   pressedInfo = 'Nothing again';
+    // }
     return (
       <View style={styles.container}>
         <Text style={styles.description}>
-          Search for houses to buy!
+          Search for Restaurants!
         </Text>
+        <View>
+          {this.pressedInfo}
+        </View>
         <Text style={styles.description}>
-          Search by place-name, postcode or search near your location.
+          Search by place-name.
         </Text>
         <View style={styles.flowRight}>
           <TextInput
@@ -167,15 +225,14 @@ class SearchPage extends Component {
           <TouchableHighlight style={styles.button}
               underlayColor='#99d9f4'
               onPress={this.onSearchPressed.bind(this)}>
-            <Text style={styles.buttonText}>Go</Text>
+            <Text style={styles.buttonText}>Search</Text>
           </TouchableHighlight>
         </View>
         <TouchableHighlight style={styles.button}
             onPress={this.onLocationPressed.bind(this)}
             underlayColor='#99d9f4'>
-          <Text style={styles.buttonText}>Location</Text>
+          <Text style={styles.buttonText}>Use my Location</Text>
         </TouchableHighlight>
-        <Image source={require('image!house')} style={styles.image}/>
         {spinner}
         <Text style={styles.description}>{this.state.message}</Text>
       </View>

@@ -9,13 +9,13 @@ var styles = React.StyleSheet.create({
   }
 });
 
-class PropertyFinderApp extends React.Component {
+class MenuSpotterApp extends React.Component {
   render() {
     return (
       <React.NavigatorIOS
         style={styles.container}
         initialRoute={{
-          title: 'Property Finder',
+          title: 'Search Page',
           component: SearchPage,
         }}/>
     );
@@ -28,5 +28,5 @@ class HelloWorld extends React.Component {
   }
 }
 
-React.AppRegistry.registerComponent('PropertyFinder',
-  function() { return PropertyFinderApp });
+React.AppRegistry.registerComponent('MenuSpotter',
+  function() { return MenuSpotterApp });
