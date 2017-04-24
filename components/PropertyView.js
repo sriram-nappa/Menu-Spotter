@@ -1,13 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-var {
-  StyleSheet,
-  Image, 
-  View,
-  Text,
-  Component
-} = React;
+import React, { Component } from 'react';
+import { StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, AsyncStorage }  from 'react-native';
 
 var styles = StyleSheet.create({
   container: {
@@ -70,4 +64,4 @@ class PropertyView extends Component {
   }
 };
 
-module.exports = PropertyView;
+AppRegistry.registerComponent('PropertyView', () => PropertyView);

@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {StyleSheet, Component, AppRegistry, NavigatorIOS} from 'react-native';
+import {StyleSheet, Component, AppRegistry, Navigator} from 'react-native';
 import SearchPage from './components/SearchPage';
 
 var styles = StyleSheet.create({
@@ -10,10 +10,10 @@ var styles = StyleSheet.create({
   }
 });
 
-class MenuSpotterIOS extends Component {
+class MenuSpotterAndroid extends Component {
   render() {
     return (
-      <NavigatorIOS
+      <Navigator
         style={styles.container}
         initialRoute={{
           title: 'Search Page',
@@ -23,4 +23,4 @@ class MenuSpotterIOS extends Component {
   }
 }
 
-AppRegistry.registerComponent('MenuSpotterIOS', () => PropertyFinderApp);
+AppRegistry.registerComponent('MenuSpotterAndroid', () => PropertyFinderApp);

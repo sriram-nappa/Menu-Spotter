@@ -1,16 +1,8 @@
 'use strict';
 
-var React = require('react-native');
-var CategoriesView = require('./CategoriesView');
-var {
-  StyleSheet,
-  Image, 
-  View,
-  TouchableHighlight,
-  ListView,
-  Text,
-  Component
-} = React;
+import React, { Component } from 'react';
+import { StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, AsyncStorage }  from 'react-native';
+import SubCategoriesView from './SubCategoriesView';
 
 var styles = StyleSheet.create({
   thumb: {
@@ -43,34 +35,32 @@ var styles = StyleSheet.create({
 function urlForCategories(locationID) {
   var querystring = locationID;
 
-  return 'https://order.postmates.com/v1/places/' + querystring;
+  return 'https://order.postmates.com/v1/categories/' + querystring + '/products';
 }
 
-class SearchResults extends Component {
+class CategoriesView extends Component {
 
   constructor(props) {
     super(props);
     var dataSource = new ListView.DataSource(
       {
         rowHasChanged: (r1, r2) => {
-          console.log("R1", r1)
           r1.name !== r2.name
         }
       });
     this.state = {
-      dataSource: dataSource.cloneWithRows(this.props.listings),
+      dataSource: dataSource.cloneWithRows(this.props.category),
       message: ''
     };
   }
 
   _handleCategoriesResponse(response) {
     console.log('Response', response.categories)
-    let categoryList = response.categories;
-    if(categoryList.length) {
+    if(response.length) {
       this.props.navigator.push({
-        title: "Categories",
-        component: CategoriesView,
-        passProps: {category: categoryList}
+        title: "Sub Categories",
+        component: SubCategoriesView,
+        passProps: {subcategory: response}
       });
     } else {
       this.setState({ message: 'Categories not found'});
@@ -99,16 +89,15 @@ class SearchResults extends Component {
 
   renderRow(rowData, sectionID, rowID) {
     console.log('Row Data:::::::::', rowData)
-    var price = rowData.data.name;
+    var name = rowData.name;
 
     return (
-      <TouchableHighlight onPress={() => this.rowPressed(rowData.data.uuid)}
+      <TouchableHighlight onPress={() => this.rowPressed(rowData.uuid)}
           underlayColor='#dddddd'>
         <View>
           <View style={styles.rowContainer}>
-            <Image style={styles.thumb} source={{ uri: rowData.data.icon_img.resolutions[0].url }} />
             <View  style={styles.textContainer}>
-              <Text style={styles.price}>{price}</Text>
+              <Text style={styles.price}>{name}</Text>
               <Text style={styles.title} 
                     numberOfLines={1}>{rowData.description}</Text>
             </View>
@@ -128,5 +117,4 @@ class SearchResults extends Component {
   }
 }
 
-
-module.exports = SearchResults;
+AppRegistry.registerComponent('CategoriesView', () => CategoriesView);

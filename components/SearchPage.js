@@ -1,17 +1,9 @@
 'use strict';
 
-var React = require('react-native');
-var SearchResults = require('./SearchResults');
-var {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableHighlight,
-  ActivityIndicatorIOS,
-  Image,
-  Component
-} = React;
+import React, { Component } from 'react';
+import { StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, TextInput, AsyncStorage, ActivityIndicator } from 'react-native';
+import SearchResults from './SearchResults';
+// , ActivityIndicatorIOS
 
 var styles = StyleSheet.create({
   description: {
@@ -185,7 +177,7 @@ class SearchPage extends Component {
 
   render() {
     var spinner = this.state.isLoading ?
-      ( <ActivityIndicatorIOS
+      ( <ActivityIndicator
           hidden='true'
           size='large'/> ) :
       ( <View/>);
@@ -222,4 +214,4 @@ class SearchPage extends Component {
   }
 }
 
-module.exports = SearchPage;
+AppRegistry.registerComponent('SearchPage', () => SearchPage);
