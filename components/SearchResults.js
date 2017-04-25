@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react-native');
-// var CategoriesView = require('./CategoriesView');
 import CategoriesView from './CategoriesView'
 
 var {

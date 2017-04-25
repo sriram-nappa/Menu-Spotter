@@ -2,6 +2,7 @@
 
 var React = require('react-native');
 var SearchResults = require('./SearchResults');
+var UserProfile = require('./UserProfile');
 var {
   StyleSheet,
   Text,
@@ -10,7 +11,8 @@ var {
   TouchableHighlight,
   ActivityIndicatorIOS,
   Image,
-  Component
+  Component,
+  AsyncStorage
 } = React;
 
 var styles = StyleSheet.create({
@@ -178,6 +180,14 @@ class SearchPage extends Component {
         });
       });
   }
+  onUserProfilePressed() {
+      // AsyncStorage.getItem("isVegan").then((value)=>{vegan = value}).done();
+      this.props.navigator.push({
+        title: 'User Profile',
+        component: UserProfile,
+        passProps: {isVegan: true}
+      });
+  }
 
   onSearchTextChanged(event) {
     this.setState({ searchString: event.nativeEvent.text });
@@ -203,7 +213,7 @@ class SearchPage extends Component {
         {spinner}
         <Text style={styles.description}>{this.state.message}</Text>
         <TouchableHighlight style={styles.button}
-            onPress={this.onLocationPressed.bind(this)}
+            onPress={this.onUserProfilePressed.bind(this)}
             underlayColor='#99d9f4'
             accessible = {true}
             accessibilityLabel ={'User profile'}
