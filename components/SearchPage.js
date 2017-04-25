@@ -1,7 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
-import { StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, TextInput, AsyncStorage, ActivityIndicator } from 'react-native';
+import React, { Component, StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, TextInput, AsyncStorage } from 'react-native';
 import SearchResults from './SearchResults';
 // , ActivityIndicatorIOS
 
@@ -87,7 +86,7 @@ function urlForGettingNearbyRestaurants(latitude, longitude) {
   return 'https://order.postmates.com/v1/feed/anywhere?' + querystring;
 }
 
-class SearchPage extends Component {
+export default class SearchPage extends Component {
 
   constructor(props) {
     super(props);
@@ -116,6 +115,7 @@ class SearchPage extends Component {
     console.log(response)
     if(response.length) {
       this.props.navigator.push({
+        name:'Search Results'
         title: 'Nearby Restaurants',
         component: SearchResults,
         passProps: {listings: response}
@@ -176,12 +176,11 @@ class SearchPage extends Component {
   }
 
   render() {
-    var spinner = this.state.isLoading ?
-      ( <ActivityIndicator
-          hidden='true'
-          size='large'/> ) :
-      ( <View/>);
-
+    // var spinner = this.state.isLoading ?
+    //   ( <React.ActivityIndicator
+    //       hidden='true'
+    //       size='large'/> ) :
+    //   ( <View/>);
     return (
       <View style={styles.container}>
         <Text style={styles.description}>
@@ -207,7 +206,6 @@ class SearchPage extends Component {
             underlayColor='#99d9f4'>
           <Text style={styles.buttonText}>Use my Location</Text>
         </TouchableHighlight>
-        {spinner}
         <Text style={styles.description}>{this.state.message}</Text>
       </View>
     );

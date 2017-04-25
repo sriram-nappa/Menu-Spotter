@@ -1,7 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
-import { StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, AsyncStorage }  from 'react-native';
+import React, { Component, StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, AsyncStorage }  from 'react-native';
 import SubCategoriesView from './SubCategoriesView';
 
 var styles = StyleSheet.create({
@@ -38,7 +37,7 @@ function urlForCategories(locationID) {
   return 'https://order.postmates.com/v1/categories/' + querystring + '/products';
 }
 
-class CategoriesView extends Component {
+export default class CategoriesView extends Component {
 
   constructor(props) {
     super(props);

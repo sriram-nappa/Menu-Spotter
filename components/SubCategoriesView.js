@@ -1,7 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
-import { StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, AsyncStorage }  from 'react-native';
+import React, { Component, StyleSheet, Image, View, TouchableHighlight, ListView, AppRegistry, Text, AsyncStorage }  from 'react-native';
 
 var styles = StyleSheet.create({
   thumb: {
@@ -31,7 +30,7 @@ var styles = StyleSheet.create({
   }
 });
 
-class SubCategoriesView extends Component {
+export default class SubCategoriesView extends Component {
   render() {
     return (
       <View style={styles.rowContainer}>

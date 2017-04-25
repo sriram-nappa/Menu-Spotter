@@ -1,8 +1,28 @@
 'use strict';
 
-import React from 'react';
-import {StyleSheet, Component, AppRegistry, Navigator} from 'react-native';
+import React, {StyleSheet, Component, AppRegistry, TouchableHighlight, Text} from 'react-native';
 import SearchPage from './components/SearchPage';
+
+export default class MenuSpotter extends Component {
+
+  renderScene(route, navigator) {
+    if(route.name == 'Home') {
+      return <SearchPage navigator = {navigator} />
+    }
+  }
+  render() {
+    return (
+      <React.Navigator
+        style={styles.container}
+        initialRoute={{
+          name: 'Home',
+          title: 'Search Page',
+          component: SearchPage
+        }}
+        renderScene={this.renderScene.bind(this)}/>
+    );
+  }
+}
 
 var styles = StyleSheet.create({
   container: {
@@ -10,17 +30,4 @@ var styles = StyleSheet.create({
   }
 });
 
-class MenuSpotterAndroid extends Component {
-  render() {
-    return (
-      <Navigator
-        style={styles.container}
-        initialRoute={{
-          title: 'Search Page',
-          component: SearchPage,
-        }}/>
-    );
-  }
-}
-
-AppRegistry.registerComponent('MenuSpotterAndroid', () => PropertyFinderApp);
+AppRegistry.registerComponent('MenuSpotter', () => MenuSpotter);
