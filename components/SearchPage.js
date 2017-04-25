@@ -9,7 +9,6 @@ var {
   View,
   TouchableHighlight,
   ActivityIndicatorIOS,
-  AsyncStorage,
   Image,
   Component
 } = React;
@@ -163,13 +162,8 @@ class SearchPage extends Component {
     var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
     this._executeQuery(query);
   }
-  
+
   onLocationPressed() {
-    // try{
-    //   await AsyncStorage.setItem('@myStore:key',' You had clicked here once');
-    // } catch (error) {
-    //   console.log('Something went wrong while persisting');
-    // }
     navigator.geolocation.getCurrentPosition(
       location => {
         var search = location.coords.latitude + ',' + location.coords.longitude;
@@ -184,9 +178,6 @@ class SearchPage extends Component {
         });
       });
   }
-  onUserProfilePressed() {
-
-  }
 
   onSearchTextChanged(event) {
     this.setState({ searchString: event.nativeEvent.text });
@@ -199,42 +190,26 @@ class SearchPage extends Component {
           size='large'/> ) :
       ( <View/>);
 
-    let pressedInfo = 'Nothing';
-    // try {
-    //   pressedInfo = await AsyncStorage.getItem('@myStore:key');
-    // } catch (error) {
-    //   pressedInfo = 'Nothing again';
-    // }
     return (
       <View style={styles.container}>
-        <Text style={styles.description}>
-          Search for Restaurants!
-        </Text>
-        <View>
-          {this.pressedInfo}
-        </View>
-        <Text style={styles.description}>
-          Search by place-name.
-        </Text>
-        <View style={styles.flowRight}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder='Search via name or postcode'
-            value={this.state.searchString}
-            onChange={this.onSearchTextChanged.bind(this)}/>
-          <TouchableHighlight style={styles.button}
-              underlayColor='#99d9f4'
-              onPress={this.onSearchPressed.bind(this)}>
-            <Text style={styles.buttonText}>Search</Text>
-          </TouchableHighlight>
-        </View>
         <TouchableHighlight style={styles.button}
             onPress={this.onLocationPressed.bind(this)}
-            underlayColor='#99d9f4'>
+            underlayColor='#99d9f4'
+            accessible = {true}
+            accessibilityLabel ={'Find restaurants near me'}
+            accessibilityTraits= 'button' >
           <Text style={styles.buttonText}>Use my Location</Text>
         </TouchableHighlight>
         {spinner}
         <Text style={styles.description}>{this.state.message}</Text>
+        <TouchableHighlight style={styles.button}
+            onPress={this.onLocationPressed.bind(this)}
+            underlayColor='#99d9f4'
+            accessible = {true}
+            accessibilityLabel ={'User profile'}
+            accessibilityTraits= 'button' >
+          <Text style={styles.buttonText}>User Profile</Text>
+        </TouchableHighlight>
       </View>
     );
   }

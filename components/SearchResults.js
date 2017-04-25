@@ -1,7 +1,9 @@
 'use strict';
 
 var React = require('react-native');
-var SubcategoriesView = require('./SubcategoriesView')
+// var CategoriesView = require('./CategoriesView');
+import CategoriesView from './CategoriesView'
+
 var {
   StyleSheet,
   Image, 
@@ -43,42 +45,47 @@ var styles = StyleSheet.create({
 function urlForCategories(locationID) {
   var querystring = locationID;
 
-  return 'https://order.postmates.com/v1/categories/' + querystring + '/products';
+  return 'https://order.postmates.com/v1/places/' + querystring;
 }
 
-class CategoriesView extends Component {
+class SearchResults extends Component {
 
   constructor(props) {
     super(props);
     var dataSource = new ListView.DataSource(
       {
         rowHasChanged: (r1, r2) => {
+          console.log("R1", r1)
           r1.name !== r2.name
         }
       });
     this.state = {
-      dataSource: dataSource.cloneWithRows(this.props.category),
+      dataSource: dataSource.cloneWithRows(this.props.listings),
       message: ''
     };
   }
 
-  _handleCategoriesResponse(response) {
+  _handleCategoriesResponse(response, uid) {
     console.log('Response', response.categories)
-    if(response.length) {
+    let categoryList = response.categories;
+    if(categoryList.length) {
       this.props.navigator.push({
-        title: "Sub Categories",
-        component: SubcategoriesView,
-        passProps: {subcategory: response}
+        title: "Categories",
+        component: CategoriesView,
+        passProps: {
+          category: categoryList,
+          resId: uid
+        }
       });
     } else {
       this.setState({ message: 'Categories not found'});
     }
   }
 
-  _executeCategoriesQuery(query) {
+  _executeCategoriesQuery(query, uid) {
     fetch(query)
       .then(response => response.json())
-      .then(json => this._handleCategoriesResponse(json.catalog))
+      .then(json => this._handleCategoriesResponse(json.catalog, uid))
       .catch(error => {
         this.setState({
           message: error
@@ -92,20 +99,21 @@ class CategoriesView extends Component {
     let uid = restaurantUID;
     let query = urlForCategories(uid);
     console.log('Query', query)
-    this._executeCategoriesQuery(query);
+    this._executeCategoriesQuery(query, uid);
   }
 
   renderRow(rowData, sectionID, rowID) {
     console.log('Row Data:::::::::', rowData)
-    var name = rowData.name;
+    var price = rowData.data.name;
 
     return (
-      <TouchableHighlight onPress={() => this.rowPressed(rowData.uuid)}
+      <TouchableHighlight onPress={() => this.rowPressed(rowData.data.uuid)}
           underlayColor='#dddddd'>
         <View>
           <View style={styles.rowContainer}>
+            <Image style={styles.thumb} source={{ uri: rowData.data.icon_img.resolutions[0].url }} />
             <View  style={styles.textContainer}>
-              <Text style={styles.price}>{name}</Text>
+              <Text style={styles.price}>{price}</Text>
               <Text style={styles.title} 
                     numberOfLines={1}>{rowData.description}</Text>
             </View>
@@ -126,4 +134,4 @@ class CategoriesView extends Component {
 }
 
 
-module.exports = CategoriesView;
+module.exports = SearchResults;

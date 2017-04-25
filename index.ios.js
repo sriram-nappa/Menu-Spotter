@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-var SearchPage = require('./SearchPage');
+var SearchPage = require('./components/SearchPage');
 
 var styles = React.StyleSheet.create({
   container: {
@@ -19,12 +19,6 @@ class MenuSpotterApp extends React.Component {
           component: SearchPage,
         }}/>
     );
-  }
-}
-
-class HelloWorld extends React.Component {
-  render() {
-    return <React.Text style={styles.text}>Hello World (Again)</React.Text>;
   }
 }
 
